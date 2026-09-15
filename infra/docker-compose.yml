@@ -1,0 +1,41 @@
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: school_saas
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ../backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: school_saas
+      DB_USER: root
+      DB_PASSWORD: root
+      JWT_SECRET: local-dev-secret-do-not-use-in-production
+      PUBLIC_BASE_DOMAIN: localhost
+      MEDIA_STORAGE_DIR: /media-storage
+    ports:
+      - "8080:8080"
+    volumes:
+      - media_storage:/media-storage
+
+volumes:
+  mysql_data:
+  media_storage:

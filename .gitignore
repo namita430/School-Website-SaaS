@@ -1,0 +1,25 @@
+# Backend
+backend/target/
+backend/media-storage/
+backend/*.log
+backend/cp.txt
+*.class
+
+# Frontend
+frontend/**/node_modules/
+frontend/**/dist/
+frontend/**/.vite/
+frontend/**/vite-run.log
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env/secrets
+.env
+.env.local
