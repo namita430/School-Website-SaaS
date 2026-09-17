@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { ComponentDefinition } from '../../types/builder';
 import { useBuilderStore } from '../../store/builderStore';
+import ImageUploadField from '../../components/ImageUploadField';
 
 /**
  * A form generated directly from the selected section's component schema -
@@ -122,6 +123,11 @@ export default function PropertiesPanel({ components }: { components: ComponentD
                 onChange={(e) => setDraft((d) => ({ ...d, [propName]: e.target.value }))}
                 placeholder={schema.type === 'array' ? '[]' : '{}'}
                 className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm font-mono"
+              />
+            ) : schema.type === 'string' && /image|photo|picture|avatar|logo|icon/i.test(propName) ? (
+              <ImageUploadField
+                value={draft[propName] ?? ''}
+                onChange={(url) => setDraft((d) => ({ ...d, [propName]: url }))}
               />
             ) : (
               <input

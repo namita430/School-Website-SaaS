@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getMySeoSettings, updateMySeoSettings, type SeoSettings } from '../api/seo';
+import ImageUploadField from '../components/ImageUploadField';
 
 /** RHF's uncontrolled inputs don't like a `null` string value - substitute '' for the form. */
 function withDefaults(settings: SeoSettings): SeoSettings {
@@ -21,6 +22,8 @@ export default function SeoPage() {
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { isDirty },
   } = useForm<SeoSettings>();
 
@@ -62,20 +65,20 @@ export default function SeoPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Default Open Graph image URL</label>
-          <input
-            type="url"
+          <label className="block text-sm font-medium text-gray-700 mb-1">Default Open Graph image</label>
+          <ImageUploadField
+            value={watch('defaultOgImageUrl') ?? ''}
+            onChange={(url) => setValue('defaultOgImageUrl', url, { shouldDirty: true })}
             className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm"
-            {...register('defaultOgImageUrl')}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Favicon URL</label>
-          <input
-            type="url"
+          <label className="block text-sm font-medium text-gray-700 mb-1">Favicon</label>
+          <ImageUploadField
+            value={watch('faviconUrl') ?? ''}
+            onChange={(url) => setValue('faviconUrl', url, { shouldDirty: true })}
             className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm"
-            {...register('faviconUrl')}
           />
         </div>
 

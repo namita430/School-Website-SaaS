@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updatePageSeo } from '../../api/seo';
 import type { PageSummary } from '../../types/builder';
 import { ApiError } from '../../api/client';
+import ImageUploadField from '../../components/ImageUploadField';
 
 /** Per-page SEO override editor - leaving a field blank falls back to the site-wide default (SeoPage). */
 export default function PageSeoPanel({ page, onClose }: { page: PageSummary; onClose: () => void }) {
@@ -44,13 +45,8 @@ export default function PageSeoPanel({ page, onClose }: { page: PageSummary; onC
           />
         </div>
         <div>
-          <label className="block text-xs text-gray-500 mb-1">Open Graph image URL (overrides site default)</label>
-          <input
-            type="url"
-            value={ogImageUrl}
-            onChange={(e) => setOgImageUrl(e.target.value)}
-            className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm"
-          />
+          <label className="block text-xs text-gray-500 mb-1">Open Graph image (overrides site default)</label>
+          <ImageUploadField value={ogImageUrl} onChange={setOgImageUrl} />
         </div>
       </div>
       {error && <p className="text-xs text-red-600 mt-2">{error}</p>}
