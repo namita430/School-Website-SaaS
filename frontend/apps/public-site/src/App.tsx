@@ -7,6 +7,7 @@ import { applySiteHead } from './lib/applySeo';
 import { SiteContext } from './context/SiteContext';
 import SitePage from './pages/SitePage';
 import NotFoundPage from './pages/NotFoundPage';
+import Header from './components/Header';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false } },
@@ -32,6 +33,7 @@ function SiteTitleSync() {
   return (
     <SiteContext.Provider value={siteQuery.data}>
       <div className="min-h-screen bg-site-bg text-site-text font-body">
+        <Header />
         <Routes>
           <Route path="/" element={<SitePage />} />
           <Route path="/:slug" element={<SitePage />} />

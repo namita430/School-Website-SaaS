@@ -8,6 +8,7 @@ import PageListPage from '../pages/PageListPage';
 import BuilderPage from '../pages/BuilderPage';
 import ThemePage from '../pages/ThemePage';
 import ContentPage from '../pages/ContentPage';
+import NavigationPage from '../pages/NavigationPage';
 import MediaLibraryPage from '../pages/MediaLibraryPage';
 import SeoPage from '../pages/SeoPage';
 import DomainPage from '../pages/DomainPage';
@@ -25,7 +26,7 @@ export default function AppRouter() {
           <Route path="/" element={<HomeRoute />} />
           <Route path="/website/pages" element={<PageListPage />} />
           <Route path="/website/builder/:pageId" element={<BuilderPage />} />
-          <Route path="/website/navigation" element={<PlaceholderPage title="Navigation" />} />
+          <Route path="/website/navigation" element={<NavigationPage />} />
           <Route path="/website/theme" element={<ThemePage />} />
           <Route path="/content/:moduleSlug" element={<ContentPage />} />
           <Route path="/media" element={<MediaLibraryPage />} />

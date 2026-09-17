@@ -3,6 +3,7 @@ package com.schoolsaas.publicsite.rendering;
 import com.schoolsaas.platform.common.NotFoundException;
 import com.schoolsaas.platform.tenant.PublicSiteProperties;
 import com.schoolsaas.platform.tenant.TenantContext;
+import com.schoolsaas.school.content.NavItemService;
 import com.schoolsaas.school.page.PageService;
 import com.schoolsaas.school.seo.SeoSettings;
 import com.schoolsaas.school.seo.SeoSettingsService;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * Read-only, unauthenticated (permitAll, see SecurityConfig) - this is what
@@ -43,14 +45,43 @@ public class PublicSiteService {
     private final ThemeService themeService;
     private final SeoSettingsService seoSettingsService;
     private final PublicSiteProperties publicSiteProperties;
+    private final NavItemService navItemService;
 
     public PublicSiteService(SchoolService schoolService, PageService pageService, ThemeService themeService,
-                              SeoSettingsService seoSettingsService, PublicSiteProperties publicSiteProperties) {
+                              SeoSettingsService seoSettingsService, PublicSiteProperties publicSiteProperties,
+                              NavItemService navItemService) {
         this.schoolService = schoolService;
         this.pageService = pageService;
         this.themeService = themeService;
         this.seoSettingsService = seoSettingsService;
         this.publicSiteProperties = publicSiteProperties;
+        this.navItemService = navItemService;
+    }
+
+    /**
+     * A school's configured nav links, in order - or, if none have been set
+     * up yet (the common case: nobody has visited School Admin's Navigation
+     * page), a sensible default built from every published page, home page
+     * first. This means a freshly AI-generated and published site is
+     * immediately browsable without requiring a manual navigation setup step.
+     */
+    @Transactional
+    public List<PublicNavItem> getNavigation() {
+        currentSchoolOrThrow();
+        List<PublicNavItem> configured = navItemService.list().stream()
+                .map(n -> new PublicNavItem(n.getLabel(), n.getUrl()))
+                .toList();
+        if (!configured.isEmpty()) {
+            return configured;
+        }
+        String homeSlug = pageService.getPublishedHomePage().map(PageService.PublishedPageContent::slug).orElse(null);
+        return pageService.listPublished().stream()
+                .sorted((a, b) -> Boolean.compare(!a.slug().equals(homeSlug), !b.slug().equals(homeSlug)))
+                .map(p -> new PublicNavItem(p.title(), p.slug().equals(homeSlug) ? "/" : "/" + p.slug()))
+                .toList();
+    }
+
+    public record PublicNavItem(String label, String url) {
     }
 
     @Transactional
