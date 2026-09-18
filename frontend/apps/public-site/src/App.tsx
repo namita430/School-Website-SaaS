@@ -8,6 +8,7 @@ import { SiteContext } from './context/SiteContext';
 import SitePage from './pages/SitePage';
 import NotFoundPage from './pages/NotFoundPage';
 import LandingPage from './pages/LandingPage';
+import SchoolLandingPage from './pages/SchoolLandingPage';
 import Header from './components/Header';
 
 const queryClient = new QueryClient({
@@ -29,12 +30,23 @@ function isBareHost(): boolean {
   return hostname === PUBLIC_BASE_DOMAIN || hostname === '127.0.0.1';
 }
 
+/**
+ * The new school landing page template (components/landing/*) is pure UI
+ * for now - not wired to any tenant's real data yet - so it's reachable at
+ * this fixed path regardless of host/tenant resolution, rather than
+ * plugged into the CMS-driven SitePage/PageRenderer flow. See
+ * SchoolLandingPage.tsx's doc comment for how to wire it to real data later.
+ */
+function isLandingPreview(): boolean {
+  return window.location.pathname === '/school-landing-preview';
+}
+
 function SiteTitleSync() {
   const siteQuery = useQuery({
     queryKey: ['public-site'],
     queryFn: getSite,
     retry: false,
-    enabled: !isBareHost(),
+    enabled: !isBareHost() && !isLandingPreview(),
   });
 
   useEffect(() => {
@@ -43,6 +55,10 @@ function SiteTitleSync() {
       applySiteHead(siteQuery.data);
     }
   }, [siteQuery.data]);
+
+  if (isLandingPreview()) {
+    return <SchoolLandingPage />;
+  }
 
   if (isBareHost()) {
     return <LandingPage />;
