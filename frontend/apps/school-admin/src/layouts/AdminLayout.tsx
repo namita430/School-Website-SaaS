@@ -1,41 +1,65 @@
+import { type ComponentType } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
+import {
+  LayoutDashboard,
+  FileText,
+  Navigation,
+  Palette,
+  Megaphone,
+  CalendarDays,
+  Newspaper,
+  Users,
+  Image,
+  Quote,
+  Building2,
+  Download,
+  FolderOpen,
+  Search,
+  Globe,
+  CreditCard,
+  ShieldCheck,
+  ScrollText,
+  Settings,
+  LogOut,
+  type LucideProps,
+} from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { logout as logoutApi } from '../api/auth';
 
-const NAV_SECTIONS: { label: string; items: { to: string; label: string }[] }[] = [
-  { label: '', items: [{ to: '/', label: 'Dashboard' }] },
+const NAV_SECTIONS: { label: string; items: { to: string; label: string; icon: ComponentType<LucideProps> }[] }[] = [
+  { label: '', items: [{ to: '/', label: 'Dashboard', icon: LayoutDashboard }] },
   {
     label: 'Website',
     items: [
-      { to: '/website/pages', label: 'Pages' },
-      { to: '/website/navigation', label: 'Navigation' },
-      { to: '/website/theme', label: 'Theme' },
+      { to: '/website/pages', label: 'Pages', icon: FileText },
+      { to: '/website/navigation', label: 'Navigation', icon: Navigation },
+      { to: '/website/theme', label: 'Theme', icon: Palette },
     ],
   },
   {
     label: 'Content',
     items: [
-      { to: '/content/notices', label: 'Notices' },
-      { to: '/content/events', label: 'Events' },
-      { to: '/content/news', label: 'News' },
-      { to: '/content/teachers', label: 'Teachers' },
-      { to: '/content/gallery', label: 'Gallery' },
-      { to: '/content/testimonials', label: 'Testimonials' },
-      { to: '/content/facilities', label: 'Facilities' },
-      { to: '/content/downloads', label: 'Downloads' },
+      { to: '/content/notices', label: 'Notices', icon: Megaphone },
+      { to: '/content/events', label: 'Events', icon: CalendarDays },
+      { to: '/content/news', label: 'News', icon: Newspaper },
+      { to: '/content/teachers', label: 'Teachers', icon: Users },
+      { to: '/content/gallery', label: 'Gallery', icon: Image },
+      { to: '/content/testimonials', label: 'Testimonials', icon: Quote },
+      { to: '/content/facilities', label: 'Facilities', icon: Building2 },
+      { to: '/content/downloads', label: 'Downloads', icon: Download },
     ],
   },
   {
     label: '',
     items: [
-      { to: '/media', label: 'Media Library' },
-      { to: '/seo', label: 'SEO' },
-      { to: '/domain', label: 'Domain' },
-      { to: '/billing', label: 'Billing' },
-      { to: '/users', label: 'Users & Roles' },
-      { to: '/audit-log', label: 'Audit Log' },
-      { to: '/settings', label: 'Settings' },
+      { to: '/media', label: 'Media Library', icon: FolderOpen },
+      { to: '/seo', label: 'SEO', icon: Search },
+      { to: '/domain', label: 'Domain', icon: Globe },
+      { to: '/billing', label: 'Billing', icon: CreditCard },
+      { to: '/users', label: 'Users & Roles', icon: ShieldCheck },
+      { to: '/audit-log', label: 'Audit Log', icon: ScrollText },
+      { to: '/settings', label: 'Settings', icon: Settings },
     ],
   },
 ];
@@ -55,7 +79,7 @@ export default function AdminLayout() {
   });
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `block rounded-md px-3 py-1.5 text-sm transition-colors ${
+    `flex items-center gap-2.5 rounded-md px-3 py-1.5 text-sm transition-colors ${
       isActive ? 'bg-primary/10 text-primary font-medium' : 'text-gray-600 hover:bg-gray-100'
     }`;
 
@@ -76,6 +100,7 @@ export default function AdminLayout() {
               <div className="space-y-0.5">
                 {section.items.map((item) => (
                   <NavLink key={item.to} to={item.to} className={linkClass} end={item.to === '/'}>
+                    <item.icon className="w-4 h-4 shrink-0" strokeWidth={1.75} />
                     {item.label}
                   </NavLink>
                 ))}
@@ -88,8 +113,9 @@ export default function AdminLayout() {
           <p className="text-xs text-gray-400 truncate mb-2">{email}</p>
           <button
             onClick={() => logoutMutation.mutate()}
-            className="text-xs text-gray-500 hover:text-red-600"
+            className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-red-600"
           >
+            <LogOut className="w-3.5 h-3.5" strokeWidth={1.75} />
             Sign out
           </button>
         </div>
