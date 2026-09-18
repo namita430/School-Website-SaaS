@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import {
   LayoutDashboard,
   FileText,
+  LayoutTemplate,
   Navigation,
   Palette,
   Megaphone,
@@ -33,6 +34,7 @@ const NAV_SECTIONS: { label: string; items: { to: string; label: string; icon: C
     label: 'Website',
     items: [
       { to: '/schooladmin/website/pages', label: 'Pages', icon: FileText },
+      { to: '/schooladmin/website/templates', label: 'Templates', icon: LayoutTemplate },
       { to: '/schooladmin/website/navigation', label: 'Navigation', icon: Navigation },
       { to: '/schooladmin/website/theme', label: 'Theme', icon: Palette },
     ],

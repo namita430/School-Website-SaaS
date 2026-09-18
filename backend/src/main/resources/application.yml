@@ -30,6 +30,10 @@ spring:
       max-request-size: 10MB
 
 app:
+  auth:
+    # Keep this true by default. Set REFRESH_COOKIE_SECURE=false only for
+    # local HTTP development, where browsers otherwise discard the cookie.
+    refresh-cookie-secure: ${REFRESH_COOKIE_SECURE:true}
   jwt:
     secret: ${JWT_SECRET:change-this-in-env-never-commit-a-real-secret}
     access-token-ttl-minutes: 15

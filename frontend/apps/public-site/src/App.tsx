@@ -68,7 +68,10 @@ function SiteTitleSync() {
     return <div className="min-h-screen flex items-center justify-center text-sm text-gray-400">Loading…</div>;
   }
   if (siteQuery.isError || !siteQuery.data) {
-    return <NotFoundPage message="This site could not be found." />;
+    // No school resolves for this host - either the platform's own base
+    // domain/port (no subdomain) or an unknown host. Show the platform
+    // landing page rather than a bare "site not found" 404.
+    return <LandingPage />;
   }
 
   return (

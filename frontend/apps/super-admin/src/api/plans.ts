@@ -7,6 +7,7 @@ export interface Plan {
   priceCents: number;
   billingInterval: 'MONTHLY' | 'YEARLY';
   isActive: boolean;
+  templateIds: string[];
 }
 
 export function listPlans() {
@@ -23,4 +24,8 @@ export function activatePlan(id: number) {
 
 export function deactivatePlan(id: number) {
   return apiFetch<Plan>(`/api/v1/superadmin/plans/${id}/deactivate`, { method: 'POST' });
+}
+
+export function updatePlanTemplates(id: number, templateIds: string[]) {
+  return apiFetch<Plan>(`/api/v1/superadmin/plans/${id}/templates`, { method: 'PUT', body: { templateIds } });
 }

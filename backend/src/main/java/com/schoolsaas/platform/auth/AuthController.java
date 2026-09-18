@@ -4,6 +4,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,9 +19,12 @@ public class AuthController {
     private static final String REFRESH_COOKIE_PATH = "/api/v1/auth";
 
     private final AuthService authService;
+    private final boolean refreshCookieSecure;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService,
+                          @Value("${app.auth.refresh-cookie-secure:true}") boolean refreshCookieSecure) {
         this.authService = authService;
+        this.refreshCookieSecure = refreshCookieSecure;
     }
 
     @PostMapping("/api/v1/auth/login")
@@ -42,7 +46,7 @@ public class AuthController {
         readRefreshCookie(request).ifPresent(authService::logout);
         ResponseCookie expired = ResponseCookie.from(REFRESH_COOKIE_NAME, "")
                 .httpOnly(true)
-                .secure(true)
+                .secure(refreshCookieSecure)
                 .sameSite("Strict")
                 .path(REFRESH_COOKIE_PATH)
                 .maxAge(0)
@@ -54,7 +58,7 @@ public class AuthController {
     private ResponseEntity<AuthResponse> withRefreshCookie(AuthService.IssuedAuth issued) {
         ResponseCookie cookie = ResponseCookie.from(REFRESH_COOKIE_NAME, issued.rawRefreshToken())
                 .httpOnly(true)
-                .secure(true)
+                .secure(refreshCookieSecure)
                 .sameSite("Strict")
                 .path(REFRESH_COOKIE_PATH)
                 .maxAge(issued.refreshTokenTtlSeconds())

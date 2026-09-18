@@ -13,6 +13,9 @@ import SchoolRootLayout from '../schooladmin/routes/RootLayout';
 import SchoolHomeRoute from '../schooladmin/routes/HomeRoute';
 import PageListPage from '../schooladmin/pages/PageListPage';
 import BuilderPage from '../schooladmin/pages/BuilderPage';
+import TemplatesPage from '../schooladmin/pages/TemplatesPage';
+import TemplateEditorPage from '../schooladmin/pages/TemplateEditorPage';
+import TemplateLivePreviewPage from '../schooladmin/pages/TemplateLivePreviewPage';
 import NavigationPage from '../schooladmin/pages/NavigationPage';
 import ThemePage from '../schooladmin/pages/ThemePage';
 import ContentPage from '../schooladmin/pages/ContentPage';
@@ -51,9 +54,15 @@ export default function AppRouter() {
       </Route>
 
       <Route element={<SchoolProtectedRoute />}>
+        {/* A live template preview is deliberately outside SchoolRootLayout: it
+            must look exactly like a visitor-facing school website, without
+            admin UI. */}
+        <Route path="/schooladmin/website/templates/:templateId/preview" element={<TemplateLivePreviewPage />} />
         <Route element={<SchoolRootLayout />}>
           <Route path="/schooladmin" element={<SchoolHomeRoute />} />
           <Route path="/schooladmin/website/pages" element={<PageListPage />} />
+          <Route path="/schooladmin/website/templates" element={<TemplatesPage />} />
+          <Route path="/schooladmin/website/templates/:templateId/edit" element={<TemplateEditorPage />} />
           <Route path="/schooladmin/website/builder/:pageId" element={<BuilderPage />} />
           <Route path="/schooladmin/website/navigation" element={<NavigationPage />} />
           <Route path="/schooladmin/website/theme" element={<ThemePage />} />
