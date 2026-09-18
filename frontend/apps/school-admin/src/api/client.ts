@@ -1,7 +1,12 @@
 import { useAuthStore } from '../store/authStore';
 import type { AuthResponse } from '../types/auth';
 
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080';
+// Relative by default so requests go through this app's own dev-server
+// proxy (see vite.config.ts) to the backend on the same origin the browser
+// loaded from - whether that's this app's own port or the public-site
+// gateway port. Override via VITE_API_BASE_URL for a build served from
+// somewhere without that proxy in front.
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
 
 export class ApiError extends Error {
   constructor(

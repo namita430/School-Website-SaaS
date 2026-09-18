@@ -42,17 +42,22 @@ Requires a MySQL instance reachable per `application.yml` (`DB_HOST`, `DB_USER`,
 
 ### Frontend apps
 
-Each app is an independent Vite project. From each app directory:
+Each app is still an independent Vite project with its own `npm install`/`npm run dev`, but only one port needs to be opened in the browser: `public-site` (5175) is the gateway — it serves the public site at `/` and proxies `/admin` and `/super-admin` through to the other two dev servers (and `/api` to the backend), so all three apps and the backend appear on a single origin, `http://localhost:5175`.
+
+Run all three (each in its own terminal):
 
 ```powershell
-cd frontend/apps/super-admin   # or school-admin / public-site
-npm install
-npm run dev
+cd frontend/apps/super-admin && npm install && npm run dev
+cd frontend/apps/school-admin && npm install && npm run dev
+cd frontend/apps/public-site && npm install && npm run dev
 ```
 
-- super-admin → http://localhost:5173
-- school-admin → http://localhost:5174
-- public-site → http://localhost:5175
+Then visit:
+- `http://localhost:5175/` → public site (landing page)
+- `http://localhost:5175/admin` → school-admin
+- `http://localhost:5175/super-admin` → super-admin
+
+Each app's own port (5173/5174/5175) still works standalone for isolated frontend work.
 
 ## Auth (Phase 1)
 

@@ -36,7 +36,7 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <BrowserRouter basename="/admin">
         <AppRouter />
       </BrowserRouter>
     </QueryClientProvider>
