@@ -5,7 +5,7 @@ import AppRouter from './routes/AppRouter';
 import { API_BASE_URL } from './api/client';
 import { useAuthStore } from './store/authStore';
 import type { AuthResponse } from './types/auth';
-
+// aaa
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false } },
 });
