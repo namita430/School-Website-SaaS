@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.LinkedHashSet;
 
 @Service
 public class PlanService {
@@ -50,6 +51,13 @@ public class PlanService {
     public Plan setActive(Long id, boolean active) {
         Plan plan = getById(id);
         plan.setActive(active);
+        return planRepository.save(plan);
+    }
+
+    @Transactional
+    public Plan setTemplates(Long id, List<String> templateIds) {
+        Plan plan = getById(id);
+        plan.setTemplateIds(new LinkedHashSet<>(templateIds));
         return planRepository.save(plan);
     }
 }

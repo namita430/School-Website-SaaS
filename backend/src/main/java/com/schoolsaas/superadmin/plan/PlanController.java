@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,5 +44,10 @@ public class PlanController {
     @PostMapping("/{id}/deactivate")
     public PlanResponse deactivate(@PathVariable Long id) {
         return PlanResponse.from(planService.setActive(id, false));
+    }
+
+    @PutMapping("/{id}/templates")
+    public PlanResponse updateTemplates(@PathVariable Long id, @Valid @RequestBody UpdatePlanTemplatesRequest request) {
+        return PlanResponse.from(planService.setTemplates(id, request.templateIds()));
     }
 }

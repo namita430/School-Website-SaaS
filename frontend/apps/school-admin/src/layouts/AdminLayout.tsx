@@ -9,6 +9,7 @@ const NAV_SECTIONS: { label: string; items: { to: string; label: string }[] }[] 
     label: 'Website',
     items: [
       { to: '/website/pages', label: 'Pages' },
+      { to: '/website/templates', label: 'Templates' },
       { to: '/website/navigation', label: 'Navigation' },
       { to: '/website/theme', label: 'Theme' },
     ],

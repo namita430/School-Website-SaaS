@@ -3,6 +3,7 @@ package com.schoolsaas.superadmin.school;
 import com.schoolsaas.platform.audit.AuditLogService;
 import com.schoolsaas.platform.common.ConflictException;
 import com.schoolsaas.platform.common.NotFoundException;
+import com.schoolsaas.superadmin.plan.PlanService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,10 +22,12 @@ public class SchoolService {
 
     private final SchoolRepository schoolRepository;
     private final AuditLogService auditLogService;
+    private final PlanService planService;
 
-    public SchoolService(SchoolRepository schoolRepository, AuditLogService auditLogService) {
+    public SchoolService(SchoolRepository schoolRepository, AuditLogService auditLogService, PlanService planService) {
         this.schoolRepository = schoolRepository;
         this.auditLogService = auditLogService;
+        this.planService = planService;
     }
 
     @Transactional
@@ -72,6 +75,16 @@ public class SchoolService {
         school.setStatus(SchoolStatus.ACTIVE);
         school = schoolRepository.save(school);
         auditLogService.record("SCHOOL_ACTIVATED", "School", id, id, Map.of("slug", school.getSlug()));
+        return school;
+    }
+
+    @Transactional
+    public School assignPlan(Long id, Long planId) {
+        School school = getById(id);
+        planService.getById(planId);
+        school.setPlanId(planId);
+        school = schoolRepository.save(school);
+        auditLogService.record("SCHOOL_PLAN_ASSIGNED", "School", id, id, Map.of("planId", planId));
         return school;
     }
 }

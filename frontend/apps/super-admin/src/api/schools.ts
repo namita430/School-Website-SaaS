@@ -31,3 +31,7 @@ export function suspendSchool(id: number) {
 export function activateSchool(id: number) {
   return apiFetch<School>(`/api/v1/superadmin/schools/${id}/activate`, { method: 'POST' });
 }
+
+export function assignSchoolPlan(id: number, planId: number) {
+  return apiFetch<School>(`/api/v1/superadmin/schools/${id}/plan`, { method: 'POST', body: { planId } });
+}

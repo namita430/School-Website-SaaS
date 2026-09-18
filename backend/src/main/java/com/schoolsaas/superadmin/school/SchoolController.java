@@ -54,6 +54,11 @@ public class SchoolController {
         return SchoolResponse.from(schoolService.update(id, request));
     }
 
+    @PostMapping("/{id}/plan")
+    public SchoolResponse assignPlan(@PathVariable Long id, @Valid @RequestBody AssignPlanRequest request) {
+        return SchoolResponse.from(schoolService.assignPlan(id, request.planId()));
+    }
+
     @PostMapping("/{id}/suspend")
     public SchoolResponse suspend(@PathVariable Long id) {
         return SchoolResponse.from(schoolService.suspend(id));

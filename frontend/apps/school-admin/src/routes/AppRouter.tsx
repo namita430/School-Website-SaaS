@@ -7,6 +7,9 @@ import SettingsPage from '../pages/SettingsPage';
 import PageListPage from '../pages/PageListPage';
 import BuilderPage from '../pages/BuilderPage';
 import ThemePage from '../pages/ThemePage';
+import TemplatesPage from '../pages/TemplatesPage';
+import TemplateEditorPage from '../pages/TemplateEditorPage';
+import TemplateLivePreviewPage from '../pages/TemplateLivePreviewPage';
 import ContentPage from '../pages/ContentPage';
 import MediaLibraryPage from '../pages/MediaLibraryPage';
 import SeoPage from '../pages/SeoPage';
@@ -21,9 +24,14 @@ export default function AppRouter() {
       <Route path="/login" element={<LoginPage />} />
 
       <Route element={<ProtectedRoute />}>
+        {/* A live template preview is deliberately outside RootLayout: it must
+            look exactly like a visitor-facing school website, without admin UI. */}
+        <Route path="/website/templates/:templateId/preview" element={<TemplateLivePreviewPage />} />
         <Route element={<RootLayout />}>
           <Route path="/" element={<HomeRoute />} />
           <Route path="/website/pages" element={<PageListPage />} />
+          <Route path="/website/templates" element={<TemplatesPage />} />
+          <Route path="/website/templates/:templateId/edit" element={<TemplateEditorPage />} />
           <Route path="/website/builder/:pageId" element={<BuilderPage />} />
           <Route path="/website/navigation" element={<PlaceholderPage title="Navigation" />} />
           <Route path="/website/theme" element={<ThemePage />} />
