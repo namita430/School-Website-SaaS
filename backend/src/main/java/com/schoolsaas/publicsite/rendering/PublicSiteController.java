@@ -46,6 +46,11 @@ public class PublicSiteController {
         return publicSiteService.getPageBySlug(slug);
     }
 
+    @GetMapping("/navigation")
+    public java.util.List<PublicSiteService.PublicNavItem> navigation() {
+        return publicSiteService.getNavigation();
+    }
+
     @GetMapping(value = "/sitemap.xml", produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<String> sitemap() {
         return ResponseEntity.ok()

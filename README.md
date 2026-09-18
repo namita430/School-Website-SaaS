@@ -2,16 +2,26 @@
 
 Multi-tenant SaaS platform for schools: visual website builder, dynamic CMS, theme engine, custom domains, super admin + school admin dashboards, and per-school public websites.
 
-Stack: Java 21 + Spring Boot + MySQL (backend) · React + TypeScript + Tailwind (frontend, three apps) · Flyway migrations · Docker Compose for local dev.
+Stack: Java 21 + Spring Boot + MySQL (backend) · React + TypeScript + Tailwind (frontend) · Flyway migrations · Docker Compose for local dev.
 
 ## Project layout
 
 ```
 backend/                 Spring Boot API (single shared app, tenant-aware)
 frontend/apps/
-  super-admin/            Platform operator dashboard
-  school-admin/           Per-school dashboard + website builder
-  public-site/            Public website renderer
+  super-admin/            The single merged frontend app - despite the
+                          folder name (kept from its original scope to
+                          avoid unnecessary churn), this now serves the
+                          platform landing page ("/"), one unified login
+                          ("/login"), the Super Admin dashboard ("/dashboard",
+                          "/schools", "/plans", "/audit-log"), AND the full
+                          School Admin dashboard + website builder, nested
+                          under "/schooladmin/*". The formerly-separate
+                          school-admin app was merged in and deleted -
+                          see AppRouter.tsx for the merged route tree.
+  public-site/            Public website renderer - one app serving every
+                          school's own site by subdomain, plus the
+                          platform's own landing page at the bare host.
 frontend/packages/
   ui/                     Shared component/design-token library (future)
   shared-types/           Shared TS types / Zod schemas (future)
@@ -42,22 +52,16 @@ Requires a MySQL instance reachable per `application.yml` (`DB_HOST`, `DB_USER`,
 
 ### Frontend apps
 
-Each app is still an independent Vite project with its own `npm install`/`npm run dev`, but only one port needs to be opened in the browser: `public-site` (5175) is the gateway — it serves the public site at `/` and proxies `/admin` and `/super-admin` through to the other two dev servers (and `/api` to the backend), so all three apps and the backend appear on a single origin, `http://localhost:5175`.
-
-Run all three (each in its own terminal):
+Two independent Vite projects now (down from three - see "Project layout" above). From each app directory:
 
 ```powershell
-cd frontend/apps/super-admin && npm install && npm run dev
-cd frontend/apps/school-admin && npm install && npm run dev
-cd frontend/apps/public-site && npm install && npm run dev
+cd frontend/apps/super-admin   # or public-site
+npm install
+npm run dev
 ```
 
-Then visit:
-- `http://localhost:5175/` → public site (landing page)
-- `http://localhost:5175/admin` → school-admin
-- `http://localhost:5175/super-admin` → super-admin
-
-Each app's own port (5173/5174/5175) still works standalone for isolated frontend work.
+- The merged app (landing, login, Super Admin, School Admin) → http://localhost:5173
+- public-site → http://localhost:5175 (a school's own site at `{slug}.localhost:5175`, or the bare host for the platform's public-site landing page)
 
 ## Auth (Phase 1)
 
