@@ -4,6 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import { getNavigation } from '../api/nav';
 import { SiteContext } from '../context/SiteContext';
 
+const SCHOOL_ADMIN_URL = import.meta.env.VITE_SCHOOL_ADMIN_URL ?? 'http://localhost:5174';
+
 /**
  * The persistent site-wide header - present on every route, unlike the
  * navbar builder block (NavbarBlock) which is only an optional per-page
@@ -39,6 +41,12 @@ export default function Header() {
               </Link>
             ),
           )}
+          <a
+            href={`${SCHOOL_ADMIN_URL}/login`}
+            className="rounded-md border border-gray-200 text-sm text-site-text/80 px-3 py-1.5 hover:border-primary hover:text-primary"
+          >
+            Staff Login
+          </a>
         </nav>
 
         <button
@@ -62,6 +70,9 @@ export default function Header() {
               </Link>
             ),
           )}
+          <a href={`${SCHOOL_ADMIN_URL}/login`} className="text-sm text-site-text/80" onClick={() => setMenuOpen(false)}>
+            Staff Login
+          </a>
         </nav>
       )}
     </header>
