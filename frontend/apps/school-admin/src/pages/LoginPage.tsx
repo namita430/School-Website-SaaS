@@ -13,6 +13,8 @@ const loginSchema = z.object({
 });
 type LoginForm = z.infer<typeof loginSchema>;
 
+const SUPER_ADMIN_URL = import.meta.env.VITE_SUPER_ADMIN_URL ?? 'http://localhost:5173';
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const setSession = useAuthStore((s) => s.setSession);
@@ -26,6 +28,16 @@ export default function LoginPage() {
   const mutation = useMutation({
     mutationFn: (data: LoginForm) => login(data.email, data.password),
     onSuccess: (auth) => {
+      // A platform operator can land on either app's login screen - rather
+      // than rejecting the credentials here, hand them off to Super Admin.
+      // The refresh-token cookie this login just set is shared across every
+      // localhost port (same host, port-agnostic cookie scoping), so Super
+      // Admin's own silent-refresh-on-load picks the session straight back
+      // up - no second login required.
+      if (auth.globalRoles.includes('SUPER_ADMIN') && auth.memberships.length === 0) {
+        window.location.href = SUPER_ADMIN_URL;
+        return;
+      }
       setSession(auth);
       navigate('/', { replace: true });
     },

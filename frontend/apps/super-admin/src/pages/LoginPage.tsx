@@ -14,6 +14,8 @@ const loginSchema = z.object({
 });
 type LoginForm = z.infer<typeof loginSchema>;
 
+const SCHOOL_ADMIN_URL = import.meta.env.VITE_SCHOOL_ADMIN_URL ?? 'http://localhost:5174';
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const setSession = useAuthStore((s) => s.setSession);
@@ -29,10 +31,15 @@ export default function LoginPage() {
     mutationFn: (data: LoginForm) => login(data.email, data.password),
     onSuccess: (auth) => {
       if (!auth.globalRoles.includes('SUPER_ADMIN')) {
-        // Deliberately don't keep the session - this app is exclusively for
-        // platform operators, a valid school-scoped login isn't enough. The
-        // backend already issued a token for this account; we just refuse
-        // to use it here rather than rejecting the credentials themselves.
+        // A school-scoped account (owner/teacher/student/parent) can land on
+        // either app's login screen - hand it off to School Admin instead of
+        // rejecting the credentials. The refresh-token cookie this login just
+        // set is shared across every localhost port, so School Admin's own
+        // silent-refresh-on-load picks the session straight back up.
+        if (auth.memberships.length > 0) {
+          window.location.href = SCHOOL_ADMIN_URL;
+          return;
+        }
         setAccessDeniedError('This account does not have platform admin access.');
         return;
       }
