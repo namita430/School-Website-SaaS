@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -14,12 +13,15 @@ const loginSchema = z.object({
 });
 type LoginForm = z.infer<typeof loginSchema>;
 
-const SCHOOL_ADMIN_URL = import.meta.env.VITE_SCHOOL_ADMIN_URL ?? 'http://localhost:5174';
-
+/**
+ * One login for the whole platform - both Super Admin and School Admin now
+ * live in this single app, so unlike the earlier two-app version there's no
+ * cross-origin handoff needed any more: whichever account signs in, the
+ * session is set here and the route just depends on what that account is.
+ */
 export default function LoginPage() {
   const navigate = useNavigate();
   const setSession = useAuthStore((s) => s.setSession);
-  const [accessDeniedError, setAccessDeniedError] = useState<string | null>(null);
 
   const {
     register,
@@ -30,37 +32,24 @@ export default function LoginPage() {
   const mutation = useMutation({
     mutationFn: (data: LoginForm) => login(data.email, data.password),
     onSuccess: (auth) => {
-      if (!auth.globalRoles.includes('SUPER_ADMIN')) {
-        // A school-scoped account (owner/teacher/student/parent) can land on
-        // either app's login screen - hand it off to School Admin instead of
-        // rejecting the credentials. The refresh-token cookie this login just
-        // set is shared across every localhost port, so School Admin's own
-        // silent-refresh-on-load picks the session straight back up.
-        if (auth.memberships.length > 0) {
-          window.location.href = SCHOOL_ADMIN_URL;
-          return;
-        }
-        setAccessDeniedError('This account does not have platform admin access.');
-        return;
-      }
       setSession(auth);
-      navigate('/dashboard', { replace: true });
+      if (auth.globalRoles.includes('SUPER_ADMIN')) {
+        navigate('/dashboard', { replace: true });
+      } else if (auth.activeSchoolId !== null) {
+        navigate('/schooladmin', { replace: true });
+      } else {
+        navigate('/', { replace: true });
+      }
     },
   });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-sm bg-white shadow-sm rounded-lg p-8 border border-gray-100">
-        <h1 className="text-xl font-semibold text-secondary mb-1">Super Admin</h1>
-        <p className="text-sm text-gray-500 mb-6">Platform administration - schools, plans, and audit log.</p>
+        <h1 className="text-xl font-semibold text-secondary mb-1">Sign in</h1>
+        <p className="text-sm text-gray-500 mb-6">Platform admin or school admin - one login for both.</p>
 
-        <form
-          onSubmit={handleSubmit((data) => {
-            setAccessDeniedError(null);
-            mutation.mutate(data);
-          })}
-          className="space-y-4"
-        >
+        <form onSubmit={handleSubmit((data) => mutation.mutate(data))} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <input
@@ -81,7 +70,6 @@ export default function LoginPage() {
             {errors.password && <p className="mt-1 text-xs text-red-600">{errors.password.message}</p>}
           </div>
 
-          {accessDeniedError && <p className="text-sm text-red-600">{accessDeniedError}</p>}
           {mutation.isError && (
             <p className="text-sm text-red-600">
               {mutation.error instanceof ApiError ? mutation.error.message : 'Login failed'}

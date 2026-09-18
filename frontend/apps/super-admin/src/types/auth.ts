@@ -1,3 +1,9 @@
+export interface SchoolMembership {
+  schoolId: number;
+  schoolName: string | null;
+  roleCode: string;
+}
+
 export interface AuthResponse {
   accessToken: string;
   tokenType: string;
@@ -6,6 +12,6 @@ export interface AuthResponse {
   email: string;
   fullName: string;
   activeSchoolId: number | null;
-  memberships: { schoolId: number; schoolName: string | null; roleCode: string }[];
+  memberships: SchoolMembership[];
   globalRoles: string[];
 }

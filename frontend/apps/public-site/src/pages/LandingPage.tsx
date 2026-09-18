@@ -1,4 +1,4 @@
-const SCHOOL_ADMIN_URL = import.meta.env.VITE_SCHOOL_ADMIN_URL ?? 'http://localhost:5174';
+const SCHOOL_ADMIN_URL = import.meta.env.VITE_APP_URL ?? 'http://localhost:5173';
 
 const FEATURES = [
   { title: 'Visual website builder', body: 'Drag-and-drop pages with a structured, themeable component system - no code required.' },
