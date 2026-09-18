@@ -6,7 +6,7 @@ import { useAuthStore } from '../store/authStore';
 import { logout as logoutApi } from '../api/auth';
 
 const NAV_ITEMS: { to: string; label: string; icon: ComponentType<LucideProps> }[] = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/schools', label: 'Schools', icon: School },
   { to: '/plans', label: 'Plans', icon: Package },
   { to: '/audit-log', label: 'Audit Log', icon: ScrollText },
@@ -39,7 +39,7 @@ export default function AdminLayout() {
         </div>
         <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
           {NAV_ITEMS.map((item) => (
-            <NavLink key={item.to} to={item.to} className={linkClass} end={item.to === '/'}>
+            <NavLink key={item.to} to={item.to} className={linkClass} end>
               <item.icon className="w-4 h-4 shrink-0" strokeWidth={1.75} />
               {item.label}
             </NavLink>
