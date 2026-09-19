@@ -53,7 +53,7 @@ export default function AdminLayout() {
             className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-red-600"
           >
             <LogOut className="w-3.5 h-3.5" strokeWidth={1.75} />
-            Sign out
+            Sign outt
           </button>
         </div>
       </aside>

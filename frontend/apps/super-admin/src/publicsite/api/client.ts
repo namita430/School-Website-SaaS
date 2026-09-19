@@ -1,9 +1,4 @@
-// Relative by default so requests go through this app's own dev-server
-// proxy (see vite.config.ts) to the backend on the same origin the browser
-// loaded from. Override via VITE_API_BASE_URL for a build served from
-// somewhere without that proxy in front (e.g. a real reverse proxy in
-// production, which is expected to set X-Forwarded-Host itself).
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080';
 
 export class ApiError extends Error {
   constructor(
