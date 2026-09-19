@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getNavigation } from '../api/nav';
 import { SiteContext } from '../context/SiteContext';
 
-const SCHOOL_ADMIN_URL = import.meta.env.VITE_APP_URL ?? 'http://localhost:5173';
+const SCHOOL_ADMIN_URL = import.meta.env.VITE_APP_URL ?? '';
 
 /**
  * The persistent site-wide header - present on every route, unlike the
@@ -42,7 +42,7 @@ export default function Header() {
             ),
           )}
           <a
-            href={`${SCHOOL_ADMIN_URL}/login`}
+            href={`${SCHOOL_ADMIN_URL}/super-admin/login`}
             className="rounded-md border border-gray-200 text-sm text-site-text/80 px-3 py-1.5 hover:border-primary hover:text-primary"
           >
             Staff Login
@@ -70,7 +70,7 @@ export default function Header() {
               </Link>
             ),
           )}
-          <a href={`${SCHOOL_ADMIN_URL}/login`} className="text-sm text-site-text/80" onClick={() => setMenuOpen(false)}>
+          <a href={`${SCHOOL_ADMIN_URL}/super-admin/login`} className="text-sm text-site-text/80" onClick={() => setMenuOpen(false)}>
             Staff Login
           </a>
         </nav>

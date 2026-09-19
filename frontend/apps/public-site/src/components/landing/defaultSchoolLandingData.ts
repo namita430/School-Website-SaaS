@@ -1,6 +1,6 @@
 import type { SchoolLandingData } from './types';
 
-const APP_URL = import.meta.env.VITE_APP_URL ?? 'http://localhost:5173';
+const APP_URL = import.meta.env.VITE_APP_URL ?? '';
 
 /**
  * Placeholder content only - every field here is meant to be swapped for
@@ -12,7 +12,7 @@ const APP_URL = import.meta.env.VITE_APP_URL ?? 'http://localhost:5173';
 export const defaultSchoolLandingData: SchoolLandingData = {
   schoolName: 'ABC School',
   logoUrl: null,
-  loginUrl: `${APP_URL}/login`,
+  loginUrl: `${APP_URL}/super-admin/login`,
   nav: [
     { label: 'Home', href: '#home' },
     { label: 'About', href: '#about' },

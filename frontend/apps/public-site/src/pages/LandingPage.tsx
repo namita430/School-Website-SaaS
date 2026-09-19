@@ -1,4 +1,4 @@
-const SCHOOL_ADMIN_URL = import.meta.env.VITE_APP_URL ?? 'http://localhost:5173';
+const SCHOOL_ADMIN_URL = import.meta.env.VITE_APP_URL ?? '';
 
 const FEATURES = [
   { title: 'Visual website builder', body: 'Drag-and-drop pages with a structured, themeable component system - no code required.' },
@@ -20,7 +20,7 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
           <span className="font-semibold text-lg text-secondary">School SaaS</span>
           <a
-            href={`${SCHOOL_ADMIN_URL}/login`}
+            href={`${SCHOOL_ADMIN_URL}/super-admin/login`}
             className="rounded-md bg-primary text-white text-sm font-medium px-4 py-2 hover:opacity-90"
           >
             Login
@@ -38,7 +38,7 @@ export default function LandingPage() {
         </p>
         <div className="flex items-center justify-center gap-3">
           <a
-            href={`${SCHOOL_ADMIN_URL}/login`}
+            href={`${SCHOOL_ADMIN_URL}/super-admin/login`}
             className="rounded-md bg-primary text-white text-sm font-medium px-6 py-3 hover:opacity-90"
           >
             Login to your dashboard
