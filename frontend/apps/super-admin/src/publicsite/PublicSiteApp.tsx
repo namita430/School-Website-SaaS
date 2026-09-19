@@ -19,7 +19,7 @@ const queryClient = new QueryClient({
  * the school's own domain) rather than the platform's own host - see
  * lib/hosts.ts. The whole platform is one app on one port: the hostname,
  * not a separate port or app, decides whether you see the platform
- * (login, dashboards) or a specific school's site.
+ * (landing, login, dashboards) or a specific school's site.
  */
 function SiteRoutes() {
   const siteQuery = useQuery({ queryKey: ['public-site'], queryFn: getSite, retry: false });

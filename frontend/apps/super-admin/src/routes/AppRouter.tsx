@@ -29,7 +29,7 @@ import SettingsPage from '../schooladmin/pages/SettingsPage';
 
 /**
  * Single merged app (see school-saas-project-status memory for the "why"):
- * "/" redirects to the login (or an active session's dashboard); "/login" is one login for every account
+ * "/" is the public landing page; "/login" is one login for every account
  * type; "/dashboard","/schools","/plans","/audit-log" are Super Admin
  * (gated by ProtectedRoute, requires isSuperAdmin); everything under
  * "/schooladmin" is the full School Admin app, ported in from the former

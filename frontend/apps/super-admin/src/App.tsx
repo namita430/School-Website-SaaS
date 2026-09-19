@@ -46,7 +46,7 @@ function PlatformApp() {
 
 /**
  * One app, one port. The address decides what you see: the platform host
- * (localhost / the apex domain) shows the login and the Super
+ * (localhost / the apex domain) is the landing page, login and the Super
  * Admin / School Admin dashboards; a school's address (demo.localhost, ...)
  * is that school's public website.
  */
