@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import AppRouter from './routes/AppRouter';
-import PublicSiteApp from './publicsite/PublicSiteApp';
 import { isPlatformHost } from './publicsite/lib/hosts';
 import { API_BASE_URL } from './api/client';
 import { useAuthStore } from './store/authStore';
 import type { AuthResponse } from './types/auth';
+
+// Loaded on demand so a visitor to a school's public site never downloads the
+// admin app (dashboards, page builder, charts), and vice versa.
+const AppRouter = lazy(() => import('./routes/AppRouter'));
+const PublicSiteApp = lazy(() => import('./publicsite/PublicSiteApp'));
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false } },
@@ -51,5 +54,9 @@ function PlatformApp() {
  * is that school's public website.
  */
 export default function App() {
-  return isPlatformHost() ? <PlatformApp /> : <PublicSiteApp />;
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-sm text-gray-400">Loading…</div>}>
+      {isPlatformHost() ? <PlatformApp /> : <PublicSiteApp />}
+    </Suspense>
+  );
 }

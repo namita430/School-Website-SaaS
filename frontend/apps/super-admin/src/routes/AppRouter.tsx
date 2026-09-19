@@ -1,31 +1,36 @@
+import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import RootRoute from './RootRoute';
 import ProtectedRoute from './ProtectedRoute';
 import SchoolProtectedRoute from './SchoolProtectedRoute';
-import AdminLayout from '../layouts/AdminLayout';
+const AdminLayout = lazy(() => import('../layouts/AdminLayout'));
 import LoginPage from '../pages/LoginPage';
-import DashboardPage from '../pages/DashboardPage';
-import SchoolsPage from '../pages/SchoolsPage';
-import PlansPage from '../pages/PlansPage';
-import AuditLogPage from '../pages/AuditLogPage';
+const DashboardPage = lazy(() => import('../pages/DashboardPage'));
+const SchoolsPage = lazy(() => import('../pages/SchoolsPage'));
+const PlansPage = lazy(() => import('../pages/PlansPage'));
+const AuditLogPage = lazy(() => import('../pages/AuditLogPage'));
 
-import SchoolRootLayout from '../schooladmin/routes/RootLayout';
-import SchoolHomeRoute from '../schooladmin/routes/HomeRoute';
-import PageListPage from '../schooladmin/pages/PageListPage';
-import BuilderPage from '../schooladmin/pages/BuilderPage';
-import TemplatesPage from '../schooladmin/pages/TemplatesPage';
-import TemplateEditorPage from '../schooladmin/pages/TemplateEditorPage';
-import TemplateLivePreviewPage from '../schooladmin/pages/TemplateLivePreviewPage';
-import NavigationPage from '../schooladmin/pages/NavigationPage';
-import ThemePage from '../schooladmin/pages/ThemePage';
-import ContentPage from '../schooladmin/pages/ContentPage';
-import MediaLibraryPage from '../schooladmin/pages/MediaLibraryPage';
-import SeoPage from '../schooladmin/pages/SeoPage';
-import DomainPage from '../schooladmin/pages/DomainPage';
-import BillingPage from '../schooladmin/pages/BillingPage';
-import SchoolAuditLogPage from '../schooladmin/pages/AuditLogPage';
-import PlaceholderPage from '../schooladmin/pages/PlaceholderPage';
-import SettingsPage from '../schooladmin/pages/SettingsPage';
+const SchoolRootLayout = lazy(() => import('../schooladmin/routes/RootLayout'));
+const SchoolHomeRoute = lazy(() => import('../schooladmin/routes/HomeRoute'));
+const PageListPage = lazy(() => import('../schooladmin/pages/PageListPage'));
+const BuilderPage = lazy(() => import('../schooladmin/pages/BuilderPage'));
+const TemplatesPage = lazy(() => import('../schooladmin/pages/TemplatesPage'));
+const TemplateEditorPage = lazy(() => import('../schooladmin/pages/TemplateEditorPage'));
+const TemplateLivePreviewPage = lazy(() => import('../schooladmin/pages/TemplateLivePreviewPage'));
+const NavigationPage = lazy(() => import('../schooladmin/pages/NavigationPage'));
+const ThemePage = lazy(() => import('../schooladmin/pages/ThemePage'));
+const ContentPage = lazy(() => import('../schooladmin/pages/ContentPage'));
+const MediaLibraryPage = lazy(() => import('../schooladmin/pages/MediaLibraryPage'));
+const SeoPage = lazy(() => import('../schooladmin/pages/SeoPage'));
+const DomainPage = lazy(() => import('../schooladmin/pages/DomainPage'));
+const BillingPage = lazy(() => import('../schooladmin/pages/BillingPage'));
+const SchoolAuditLogPage = lazy(() => import('../schooladmin/pages/AuditLogPage'));
+const PlaceholderPage = lazy(() => import('../schooladmin/pages/PlaceholderPage'));
+const SettingsPage = lazy(() => import('../schooladmin/pages/SettingsPage'));
+
+function RouteFallback() {
+  return <div className="min-h-screen flex items-center justify-center text-sm text-gray-400">Loading…</div>;
+}
 
 /**
  * Single merged app (see school-saas-project-status memory for the "why"):
@@ -40,6 +45,7 @@ import SettingsPage from '../schooladmin/pages/SettingsPage';
  */
 export default function AppRouter() {
   return (
+    <Suspense fallback={<RouteFallback />}>
     <Routes>
       <Route path="/" element={<RootRoute />} />
       <Route path="/login" element={<LoginPage />} />
@@ -77,5 +83,6 @@ export default function AppRouter() {
         </Route>
       </Route>
     </Routes>
+    </Suspense>
   );
 }
