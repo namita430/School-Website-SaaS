@@ -1,8 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
-import LandingPage from '../pages/LandingPage';
 
-/** "/" is the public landing page when logged out, or a redirect straight into the right dashboard for an active session. */
+/** "/" sends an active session to its own dashboard, and everyone else to the login page. */
 export default function RootRoute() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const isSuperAdmin = useAuthStore((s) => s.isSuperAdmin);
@@ -14,5 +13,5 @@ export default function RootRoute() {
   if (isAuthenticated && activeSchoolId !== null) {
     return <Navigate to="/schooladmin" replace />;
   }
-  return <LandingPage />;
+  return <Navigate to="/login" replace />;
 }
