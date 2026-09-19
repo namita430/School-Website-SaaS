@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getNavigation } from '../api/nav';
 import { SiteContext } from '../context/SiteContext';
 
-const SCHOOL_ADMIN_URL = import.meta.env.VITE_APP_URL ?? '';
+const SCHOOL_ADMIN_URL = import.meta.env.VITE_APP_URL ?? 'http://localhost:5173';
 
 /**
  * The persistent site-wide header - present on every route, unlike the
