@@ -7,11 +7,13 @@ export default function LandingHeader({
   logoUrl,
   nav,
   loginUrl,
+  loginLabel = 'Login',
 }: {
   schoolName: string;
   logoUrl?: string | null;
   nav: NavItem[];
   loginUrl: string;
+  loginLabel?: string;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -42,7 +44,7 @@ export default function LandingHeader({
             href={loginUrl}
             className="rounded-theme bg-primary text-white text-sm font-medium px-5 py-2 hover:opacity-90 transition-opacity"
           >
-            Login
+            {loginLabel}
           </a>
         </div>
 
@@ -72,7 +74,7 @@ export default function LandingHeader({
             href={loginUrl}
             className="rounded-theme bg-primary text-white text-sm font-medium px-5 py-2.5 text-center mt-1 hover:opacity-90"
           >
-            Login
+            {loginLabel}
           </a>
         </nav>
       )}
