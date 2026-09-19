@@ -7,6 +7,8 @@ export default {
         primary: 'var(--color-primary, #2563eb)',
         secondary: 'var(--color-secondary, #1e293b)',
         accent: 'var(--color-accent, #f59e0b)',
+        'site-bg': 'var(--color-background, #ffffff)',
+        'site-text': 'var(--color-text, #111827)',
       },
       fontFamily: {
         heading: 'var(--font-heading, Inter, sans-serif)',

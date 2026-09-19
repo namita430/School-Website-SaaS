@@ -34,7 +34,7 @@ export default function LoginPage() {
     onSuccess: (auth) => {
       setSession(auth);
       if (auth.globalRoles.includes('SUPER_ADMIN')) {
-        navigate('/dashboard', { replace: true });
+        navigate('/admin-login', { replace: true });
       } else if (auth.activeSchoolId !== null) {
         navigate('/schooladmin', { replace: true });
       } else {

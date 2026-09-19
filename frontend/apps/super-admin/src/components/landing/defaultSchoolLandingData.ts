@@ -14,7 +14,7 @@ import type { SchoolLandingData } from './types';
 export const defaultSchoolLandingData: SchoolLandingData = {
   schoolName: 'School SaaS',
   logoUrl: null,
-  loginUrl: '/login',
+  loginUrl: `${import.meta.env.BASE_URL}login`,
   nav: [
     { label: 'Home', href: '#home' },
     { label: 'About', href: '#about' },

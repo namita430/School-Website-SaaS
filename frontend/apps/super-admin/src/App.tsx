@@ -1,23 +1,26 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import AppRouter from './routes/AppRouter';
+import { isPlatformHost } from './publicsite/lib/hosts';
 import { API_BASE_URL } from './api/client';
 import { useAuthStore } from './store/authStore';
 import type { AuthResponse } from './types/auth';
+
+// Loaded on demand so a visitor to a school's public site never downloads the
+// admin app (dashboards, page builder, charts), and vice versa.
+const AppRouter = lazy(() => import('./routes/AppRouter'));
+const PublicSiteApp = lazy(() => import('./publicsite/PublicSiteApp'));
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false } },
 });
 
-export default function App() {
+function PlatformApp() {
   const [bootstrapped, setBootstrapped] = useState(false);
   const setSession = useAuthStore((s) => s.setSession);
 
-  // Same silent-resume pattern as school-admin: try the refresh cookie once
-  // on load before rendering any protected route. A resumed session that
-  // turns out not to be SUPER_ADMIN just falls through to ProtectedRoute's
-  // redirect, same as a fresh non-admin login attempt.
+  // Try the refresh cookie once on load before rendering any protected
+  // route, so a reload silently resumes an existing session.
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/v1/auth/refresh`, { method: 'POST', credentials: 'include' })
       .then(async (res) => {
@@ -41,5 +44,19 @@ export default function App() {
         <AppRouter />
       </BrowserRouter>
     </QueryClientProvider>
+  );
+}
+
+/**
+ * One app, one port. The address decides what you see: the platform host
+ * (localhost / the apex domain) is the landing page, login and the Super
+ * Admin / School Admin dashboards; a school's address (demo.localhost, ...)
+ * is that school's public website.
+ */
+export default function App() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-sm text-gray-400">Loading…</div>}>
+      {isPlatformHost() ? <PlatformApp /> : <PublicSiteApp />}
+    </Suspense>
   );
 }

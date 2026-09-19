@@ -6,7 +6,7 @@ import { useAuthStore } from '../store/authStore';
 import { logout as logoutApi } from '../api/auth';
 
 const NAV_ITEMS: { to: string; label: string; icon: ComponentType<LucideProps> }[] = [
-  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/admin-login', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/schools', label: 'Schools', icon: School },
   { to: '/plans', label: 'Plans', icon: Package },
   { to: '/audit-log', label: 'Audit Log', icon: ScrollText },
