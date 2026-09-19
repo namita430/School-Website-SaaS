@@ -14,7 +14,7 @@ frontend/apps/
                           decides what you see (see src/App.tsx):
                             localhost:5173            platform landing page
                             localhost:5173/login      one login for everyone
-                            /dashboard, /schools,     Super Admin
+                            /admin-login, /schools,     Super Admin
                             /plans, /audit-log
                             /schooladmin/*            School Admin + builder
                             demo.localhost:5173, ...  that school's public

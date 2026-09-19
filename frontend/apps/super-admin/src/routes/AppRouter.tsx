@@ -30,7 +30,7 @@ import SettingsPage from '../schooladmin/pages/SettingsPage';
 /**
  * Single merged app (see school-saas-project-status memory for the "why"):
  * "/" is the public landing page; "/login" is one login for every account
- * type; "/dashboard","/schools","/plans","/audit-log" are Super Admin
+ * type; "/admin-login" (dashboard),"/schools","/plans","/audit-log" are Super Admin
  * (gated by ProtectedRoute, requires isSuperAdmin); everything under
  * "/schooladmin" is the full School Admin app, ported in from the former
  * separate school-admin project (gated by SchoolProtectedRoute, requires an
@@ -46,7 +46,7 @@ export default function AppRouter() {
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AdminLayout />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/admin-login" element={<DashboardPage />} />
           <Route path="/schools" element={<SchoolsPage />} />
           <Route path="/plans" element={<PlansPage />} />
           <Route path="/audit-log" element={<AuditLogPage />} />
