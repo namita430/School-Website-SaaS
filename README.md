@@ -9,19 +9,18 @@ Stack: Java 21 + Spring Boot + MySQL (backend) · React + TypeScript + Tailwind 
 ```
 backend/                 Spring Boot API (single shared app, tenant-aware)
 frontend/apps/
-  super-admin/            The single merged frontend app - despite the
-                          folder name (kept from its original scope to
-                          avoid unnecessary churn), this now serves the
-                          platform landing page ("/"), one unified login
-                          ("/login"), the Super Admin dashboard ("/dashboard",
-                          "/schools", "/plans", "/audit-log"), AND the full
-                          School Admin dashboard + website builder, nested
-                          under "/schooladmin/*". The formerly-separate
-                          school-admin app was merged in and deleted -
-                          see AppRouter.tsx for the merged route tree.
-  public-site/            Public website renderer - one app serving every
-                          school's own site by subdomain, plus the
-                          platform's own landing page at the bare host.
+  super-admin/            The ONE frontend app, on ONE port (5173) - despite
+                          the folder name (kept to avoid churn). The address
+                          decides what you see (see src/App.tsx):
+                            localhost:5173            platform landing page
+                            localhost:5173/login      one login for everyone
+                            /dashboard, /schools,     Super Admin
+                            /plans, /audit-log
+                            /schooladmin/*            School Admin + builder
+                            demo.localhost:5173, ...  that school's public
+                                                      website (src/publicsite)
+                          The formerly-separate school-admin and public-site
+                          apps were merged in and deleted.
 frontend/packages/
   ui/                     Shared component/design-token library (future)
   shared-types/           Shared TS types / Zod schemas (future)
@@ -50,18 +49,19 @@ mvn spring-boot:run
 
 Requires a MySQL instance reachable per `application.yml` (`DB_HOST`, `DB_USER`, `DB_PASSWORD` env vars override defaults).
 
-### Frontend apps
+### Frontend
 
-Two independent Vite projects now (down from three - see "Project layout" above). From each app directory:
+One Vite project, one port. From `frontend/apps/super-admin`:
 
 ```powershell
-cd frontend/apps/super-admin   # or public-site
 npm install
-npm run dev
+npm run dev     # http://localhost:5173 (strictPort: fails instead of picking another port)
 ```
 
-- The merged app (landing, login, Super Admin, School Admin) → http://localhost:5173
-- public-site → http://localhost:5175 (a school's own site at `{slug}.localhost:5175`, or the bare host for the platform's public-site landing page)
+- Platform (landing, login, dashboards) → http://localhost:5173
+- A school's public site → http://{slug}.localhost:5173 (e.g. http://demo.localhost:5173)
+
+`/api` is proxied to the backend on 8080, so the browser only talks to 5173. `*.localhost` resolves to 127.0.0.1 on modern OSes, no hosts-file changes needed.
 
 ## Auth (Phase 1)
 

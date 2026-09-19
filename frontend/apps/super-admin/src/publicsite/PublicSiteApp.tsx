@@ -14,35 +14,15 @@ const queryClient = new QueryClient({
 });
 
 /**
- * The platform's one landing page (and the one login for Super Admin and
- * School Admin) lives in the merged app, not here - this app only renders a
- * specific school's own public site. A bare host (no school subdomain, e.g.
- * "localhost" in dev or the apex domain in production), or a host no school
- * resolves for, is therefore sent to that landing page instead of getting a
- * second copy of it.
+ * A school's own public website. Rendered by the top-level App whenever the
+ * browser is on a school's address (demo.localhost, riverside.localhost, or
+ * the school's own domain) rather than the platform's own host - see
+ * lib/hosts.ts. The whole platform is one app on one port: the hostname,
+ * not a separate port or app, decides whether you see the platform
+ * (landing, login, dashboards) or a specific school's site.
  */
-const APP_URL = import.meta.env.VITE_APP_URL ?? 'http://localhost:5173';
-const PUBLIC_BASE_DOMAIN = import.meta.env.VITE_PUBLIC_BASE_DOMAIN ?? 'localhost';
-
-function isBareHost(): boolean {
-  const hostname = window.location.hostname;
-  return hostname === PUBLIC_BASE_DOMAIN || hostname === '127.0.0.1';
-}
-
-function RedirectToPlatform() {
-  useEffect(() => {
-    window.location.replace(`${APP_URL}/super-admin/`);
-  }, []);
-  return null;
-}
-
-function SiteTitleSync() {
-  const siteQuery = useQuery({
-    queryKey: ['public-site'],
-    queryFn: getSite,
-    retry: false,
-    enabled: !isBareHost(),
-  });
+function SiteRoutes() {
+  const siteQuery = useQuery({ queryKey: ['public-site'], queryFn: getSite, retry: false });
 
   useEffect(() => {
     if (siteQuery.data) {
@@ -51,15 +31,11 @@ function SiteTitleSync() {
     }
   }, [siteQuery.data]);
 
-  if (isBareHost()) {
-    return <RedirectToPlatform />;
-  }
-
   if (siteQuery.isLoading) {
     return <div className="min-h-screen flex items-center justify-center text-sm text-gray-400">Loading…</div>;
   }
   if (siteQuery.isError || !siteQuery.data) {
-    return <RedirectToPlatform />;
+    return <NotFoundPage message="This site could not be found." />;
   }
 
   return (
@@ -76,11 +52,11 @@ function SiteTitleSync() {
   );
 }
 
-export default function App() {
+export default function PublicSiteApp() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <SiteTitleSync />
+        <SiteRoutes />
       </BrowserRouter>
     </QueryClientProvider>
   );

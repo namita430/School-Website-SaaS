@@ -17,12 +17,11 @@ import java.util.List;
 public class CorsProperties {
 
     private List<String> allowedOriginPatterns = List.of(
-            // The single merged app (landing + Super Admin + School Admin).
+            // The single app for everything: the platform (landing, login,
+            // dashboards) on localhost:5173 and each school's own public
+            // site on its subdomain of the same port (demo.localhost:5173).
             "http://localhost:5173",
-            // The public-site app - every school's own subdomain, plus the
-            // bare host for the platform's own landing page there.
-            "http://*.localhost:5175",
-            "http://localhost:5175"
+            "http://*.localhost:5173"
     );
 
     public List<String> getAllowedOriginPatterns() {
